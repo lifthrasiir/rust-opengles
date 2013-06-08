@@ -1,3 +1,10 @@
 Makefile
 libopengles-*.so
 librustopengles.dummy
+*.o
+*.res
+*.dll
+gl2.rs
+egl.rs
+angle/src/*.dll
+angle/src/*.a

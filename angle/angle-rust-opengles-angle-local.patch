@@ -1,0 +1,60 @@
+diff -ur mozilla-central/gfx/angle/include/GLSLANG/ShaderLang.h rust-opengles-angle/angle/include/GLSLANG/ShaderLang.h
+--- mozilla-central/gfx/angle/include/GLSLANG/ShaderLang.h
++++ rust-opengles-angle/angle/include/GLSLANG/ShaderLang.h
+@@ -12,7 +12,7 @@
+ #if defined(COMPILER_IMPLEMENTATION)
+ #define COMPILER_EXPORT __declspec(dllexport)
+ #else
+-#define COMPILER_EXPORT __declspec(dllimport)
++#define COMPILER_EXPORT
+ #endif  // defined(COMPILER_IMPLEMENTATION)
+ 
+ #else  // defined(WIN32)
+diff -ur mozilla-central/gfx/angle/src/common/system.h rust-opengles-angle/angle/src/common/system.h
+--- mozilla-central/gfx/angle/src/common/system.h
++++ rust-opengles-angle/angle/src/common/system.h
+@@ -13,6 +13,10 @@
+ #define WIN32_LEAN_AND_MEAN
+ #endif
+ 
++#if !defined(_WIN32_WINNT)
++#define _WIN32_WINNT 0x0600
++#endif
++
+ #include <windows.h>
+ #include <d3d9.h>
+ #include <d3dcompiler.h>
+diff -ur mozilla-central/gfx/angle/src/libEGL/Config.h rust-opengles-angle/angle/src/libEGL/Config.h
+--- mozilla-central/gfx/angle/src/libEGL/Config.h
++++ rust-opengles-angle/angle/src/libEGL/Config.h
+@@ -94,7 +94,7 @@
+ 
+ class ConfigSet
+ {
+-    friend Display;
++    friend class Display;
+ 
+   public:
+     ConfigSet();
+diff -ur mozilla-central/gfx/angle/src/libEGL/Display.cpp rust-opengles-angle/angle/src/libEGL/Display.cpp
+--- mozilla-central/gfx/angle/src/libEGL/Display.cpp
++++ rust-opengles-angle/angle/src/libEGL/Display.cpp
+@@ -510,6 +510,7 @@
+ 
+     if (mD3d9Ex)
+     {
++        static const GUID IID_IDirect3DDevice9Ex = {0xb18b10ce, 0x2649, 0x405a, 0x87, 0xf, 0x95, 0xf7, 0x77, 0xd4, 0x31, 0x3a};
+         result = mDevice->QueryInterface(IID_IDirect3DDevice9Ex, (void**) &mDeviceEx);
+         ASSERT(SUCCEEDED(result));
+     }
+diff -ur mozilla-central/gfx/angle/src/libGLESv2/ProgramBinary.cpp rust-opengles-angle/angle/src/libGLESv2/ProgramBinary.cpp
+--- mozilla-central/gfx/angle/src/libGLESv2/ProgramBinary.cpp
++++ rust-opengles-angle/angle/src/libGLESv2/ProgramBinary.cpp
+@@ -19,6 +19,7 @@
+ #include "libGLESv2/utilities.h"
+ 
+ #include <string>
++#include <climits>
+ 
+ #if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
+ #define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3

@@ -16,7 +16,21 @@ RUSTFLAGS += --cfg mac_10_7
 endif
 endif
 
-RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
+ifneq (,$(findstring MINGW,$(shell uname -s)))
+ABI = stdcall
+ANGLE_SRC = $(VPATH)/angle/src
+ANGLE_DLLS = libGLESv2.dll libEGL.dll
+ANGLE_CLEAN = angle-clean
+else
+ABI = cdecl
+ANGLE_SRC =
+ANGLE_DLLS =
+ANGLE_CLEAN =
+endif
+
+RUST_SRC = cgl.rs
+RUST_GEN_TMPL = gl2.rs.in egl.rs.in
+RUST_GEN_SRC = $(patsubst %.rs.in,%.rs,$(RUST_GEN_TMPL))
 
 .PHONY: all
 all:	librustopengles.dummy
@@ -24,9 +38,23 @@ all:	librustopengles.dummy
 %.o:	%.c
 	$(CC) $< -o $@ -c $(CFLAGS)
 
-librustopengles.dummy: opengles.rc $(RUST_SRC)
+%.rs:	%.rs.in
+	sed 's/"ABI"/"$(ABI)"/' $< > $@
+
+librustopengles.dummy: opengles.rc $(RUST_SRC) $(RUST_GEN_SRC) $(ANGLE_DLLS)
 	$(RUSTC) $(RUSTFLAGS) $< -o $@
 	touch $@
+
+ifneq ($(ANGLE_SRC),)
+libEGL.dll: $(ANGLE_SRC)/libEGL.dll
+	cp $< $@
+libGLESv2.dll: $(ANGLE_SRC)/libGLESv2.dll
+	cp $< $@
+$(ANGLE_SRC)/libEGL.dll:
+	cd $(ANGLE_SRC) && $(MAKE) libEGL.dll
+$(ANGLE_SRC)/libGLESv2.dll:
+	cd $(ANGLE_SRC) && $(MAKE) libGLESv2.dll
+endif
 
 rustopengles-test: opengles.rc $(RUST_SRC)
 	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
@@ -34,7 +62,9 @@ rustopengles-test: opengles.rc $(RUST_SRC)
 check: rustopengles-test
 	./rustopengles-test
 
-.PHONY: clean
-clean:
-	rm -f *.o *.a *.so *.dylib *.dll *.dummy *-test
+.PHONY: clean angle-clean
+clean: $(ANGLE_CLEAN)
+	rm -f *.o *.a *.so *.dylib *.dll *.dummy *-test $(RUST_GEN_SRC)
+angle-clean:
+	cd $(ANGLE_SRC) && $(MAKE) clean
 
