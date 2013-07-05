@@ -9,11 +9,12 @@
 
 //! Bindings to EGL (currently limited to win32 platform)
 
-use core::libc::*;
-use core::ptr::{null, mut_null, to_mut_unsafe_ptr};
-use core::str::as_c_str;
-use core::str::raw::from_c_str;
-use core::vec::raw::{to_ptr, to_mut_ptr};
+use std::libc::*;
+use std::ptr::{null, mut_null, is_null, to_mut_unsafe_ptr};
+use std::str::as_c_str;
+use std::str::raw::from_c_str;
+use std::vec::{from_elem, map_consume};
+use std::vec::raw::{to_ptr, to_mut_ptr};
 
 pub type EGLint = i32;
 pub type EGLBoolean = c_uint;
@@ -195,12 +196,12 @@ fn wrap_context(context: EGLContext) -> Result<Context,EGLenum> {
 
 fn unwrap_attrib_list<T>(attrib_list: AttribList, f: &fn(*EGLint) -> T) -> T {
     let mut unwrapped = ~[];
-    for attrib_list.each |&(attribute, value)| {
+    for attrib_list.iter().advance |&(attribute, value)| {
         unwrapped.push(attribute as EGLint);
         unwrapped.push(value);
     }
     unwrapped.push(NONE as EGLint);
-    unsafe { f(to_ptr(unwrapped)) }
+    f(to_ptr(unwrapped))
 }
 
 pub fn get_display(display_id: EGLNativeDisplayType) -> Result<Display,EGLenum> {
@@ -209,7 +210,8 @@ pub fn get_display(display_id: EGLNativeDisplayType) -> Result<Display,EGLenum> 
 
 pub fn initialize(dpy: Display) -> Result<(int,int),EGLenum> {
     unsafe {
-        let mut major = 0, minor = 0;
+        let mut major = 0;
+        let mut minor = 0;
         if eglInitialize(*dpy, to_mut_unsafe_ptr(&mut major), to_mut_unsafe_ptr(&mut minor)) == TRUE {
             Ok((major as int, minor as int))
         } else {
@@ -225,7 +227,7 @@ pub fn terminate(dpy: Display) -> Result<(),EGLenum> {
 pub fn query_string(dpy: Display, name: EGLenum) -> ~str {
     unsafe {
         let s = eglQueryString(*dpy, name as EGLint);
-        if !ptr::is_null(s) {
+        if !is_null(s) {
             from_c_str(s as *c_char)
         } else {
             ~""
@@ -254,14 +256,14 @@ pub fn num_configs(dpy: Display, attrib_list: AttribList) -> Result<int,EGLenum>
 
 pub fn get_configs(dpy: Display, attrib_list: AttribList, num: Option<uint>) -> Result<~[Config],EGLenum> {
     unsafe {
-        let mut requested = match num {
+        let requested = match num {
             Some(n) => n,
             None => match num_configs(dpy, attrib_list) {
                 Ok(n) => n as uint,
                 Err(err) => return Err(err)
             }
         };
-        let mut configs = vec::from_elem(requested, null());
+        let mut configs = from_elem(requested, null());
 
         let mut actual: EGLint = 0;
         let ll_configs = to_mut_ptr(configs);
@@ -276,7 +278,7 @@ pub fn get_configs(dpy: Display, attrib_list: AttribList, num: Option<uint>) -> 
         };
         if ret == TRUE {
             configs.truncate(actual as uint);
-            Ok(vec::map_consume(configs, |c| Config(c)))
+            Ok(map_consume(configs, |c| Config(c)))
         } else {
             wrap_error()
         }
