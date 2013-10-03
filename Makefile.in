@@ -41,8 +41,8 @@ all:	librustopengles.dummy
 %.rs:	%.rs.in
 	sed 's/"ABI"/"$(ABI)"/' $< > $@
 
-librustopengles.dummy: opengles.rc $(RUST_SRC) $(RUST_GEN_SRC) $(ANGLE_DLLS)
-	$(RUSTC) $(RUSTFLAGS) $< -o $@
+librustopengles.dummy: lib.rs $(RUST_SRC) $(RUST_GEN_SRC) $(ANGLE_DLLS)
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
 ifneq ($(ANGLE_SRC),)
@@ -56,7 +56,7 @@ $(ANGLE_SRC)/libGLESv2.dll:
 	cd $(ANGLE_SRC) && $(MAKE) libGLESv2.dll
 endif
 
-rustopengles-test: opengles.rc $(RUST_SRC)
+rustopengles-test: lib.rs $(RUST_SRC)
 	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
 
 check: rustopengles-test

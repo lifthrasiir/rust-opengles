@@ -11,9 +11,8 @@
 
 use std::libc::*;
 use std::ptr::{null, mut_null, is_null, to_mut_unsafe_ptr};
-use std::str::as_c_str;
 use std::str::raw::from_c_str;
-use std::vec::{from_elem, map_consume};
+use std::vec::from_elem;
 use std::vec::raw::{to_ptr, to_mut_ptr};
 
 pub type EGLint = i32;
@@ -158,6 +157,7 @@ pub static COLORSPACE_LINEAR: EGLenum = VG_COLORSPACE_LINEAR;
 pub static ALPHA_FORMAT_NONPRE: EGLenum = VG_ALPHA_FORMAT_NONPRE;
 pub static ALPHA_FORMAT_PRE: EGLenum = VG_ALPHA_FORMAT_PRE;
 
+#[fixed_stack_segment]
 fn wrap_error<T>() -> Result<T,EGLenum> {
     unsafe { Err(eglGetError() as EGLenum) }
 }
@@ -196,7 +196,7 @@ fn wrap_context(context: EGLContext) -> Result<Context,EGLenum> {
 
 fn unwrap_attrib_list<T>(attrib_list: AttribList, f: &fn(*EGLint) -> T) -> T {
     let mut unwrapped = ~[];
-    for attrib_list.iter().advance |&(attribute, value)| {
+    for &(attribute, value) in attrib_list.iter() {
         unwrapped.push(attribute as EGLint);
         unwrapped.push(value);
     }
@@ -204,10 +204,12 @@ fn unwrap_attrib_list<T>(attrib_list: AttribList, f: &fn(*EGLint) -> T) -> T {
     f(to_ptr(unwrapped))
 }
 
+#[fixed_stack_segment]
 pub fn get_display(display_id: EGLNativeDisplayType) -> Result<Display,EGLenum> {
     unsafe { wrap_display(eglGetDisplay(display_id)) }
 }
 
+#[fixed_stack_segment]
 pub fn initialize(dpy: Display) -> Result<(int,int),EGLenum> {
     unsafe {
         let mut major = 0;
@@ -220,10 +222,12 @@ pub fn initialize(dpy: Display) -> Result<(int,int),EGLenum> {
     }
 }
 
+#[fixed_stack_segment]
 pub fn terminate(dpy: Display) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglTerminate(*dpy)) }
 }
 
+#[fixed_stack_segment]
 pub fn query_string(dpy: Display, name: EGLenum) -> ~str {
     unsafe {
         let s = eglQueryString(*dpy, name as EGLint);
@@ -235,6 +239,7 @@ pub fn query_string(dpy: Display, name: EGLenum) -> ~str {
     }
 }
 
+#[fixed_stack_segment]
 pub fn num_configs(dpy: Display, attrib_list: AttribList) -> Result<int,EGLenum> {
     unsafe {
         let mut actual: EGLint = 0;
@@ -253,6 +258,7 @@ pub fn num_configs(dpy: Display, attrib_list: AttribList) -> Result<int,EGLenum>
         }
     }
 }
+#[fixed_stack_segment]
 
 pub fn get_configs(dpy: Display, attrib_list: AttribList, num: Option<uint>) -> Result<~[Config],EGLenum> {
     unsafe {
@@ -278,13 +284,14 @@ pub fn get_configs(dpy: Display, attrib_list: AttribList, num: Option<uint>) -> 
         };
         if ret == TRUE {
             configs.truncate(actual as uint);
-            Ok(map_consume(configs, |c| Config(c)))
+            Ok(configs.move_iter().map(Config).collect())
         } else {
             wrap_error()
         }
     }
 }
 
+#[fixed_stack_segment]
 pub fn get_config_attrib(dpy: Display, config: Config, attribute: EGLenum) -> Result<EGLint,EGLenum> {
     unsafe {
         let mut ret: EGLint = 0;
@@ -296,6 +303,7 @@ pub fn get_config_attrib(dpy: Display, config: Config, attribute: EGLenum) -> Re
     }
 }
 
+#[fixed_stack_segment]
 pub fn create_window_surface(dpy: Display, config: Config, win: EGLNativeWindowType, attrib_list: AttribList) -> Result<Surface,EGLenum> {
     unsafe {
         do unwrap_attrib_list(attrib_list) |attrib_list| {
@@ -304,6 +312,7 @@ pub fn create_window_surface(dpy: Display, config: Config, win: EGLNativeWindowT
     }
 }
 
+#[fixed_stack_segment]
 pub fn create_pbuffer_surface(dpy: Display, config: Config, attrib_list: AttribList) -> Result<Surface,EGLenum> {
     unsafe {
         do unwrap_attrib_list(attrib_list) |attrib_list| {
@@ -312,6 +321,7 @@ pub fn create_pbuffer_surface(dpy: Display, config: Config, attrib_list: AttribL
     }
 }
 
+#[fixed_stack_segment]
 pub fn create_pixmap_surface(dpy: Display, config: Config, pixmap: EGLNativePixmapType, attrib_list: AttribList) -> Result<Surface,EGLenum> {
     unsafe {
         do unwrap_attrib_list(attrib_list) |attrib_list| {
@@ -320,10 +330,12 @@ pub fn create_pixmap_surface(dpy: Display, config: Config, pixmap: EGLNativePixm
     }
 }
 
+#[fixed_stack_segment]
 pub fn destroy_surface(dpy: Display, surface: Surface) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglDestroySurface(*dpy, *surface)) }
 }
 
+#[fixed_stack_segment]
 pub fn query_surface(dpy: Display, surface: Surface, attribute: EGLenum) -> Result<EGLint,EGLenum> {
     unsafe {
         let mut value: EGLint = 0;
@@ -335,22 +347,27 @@ pub fn query_surface(dpy: Display, surface: Surface, attribute: EGLenum) -> Resu
     }
 }
 
+#[fixed_stack_segment]
 pub fn bind_api(api: EGLenum) -> bool {
     unsafe { eglBindAPI(api) == TRUE }
 }
 
+#[fixed_stack_segment]
 pub fn query_api() -> EGLenum {
     unsafe { eglQueryAPI() }
 }
 
+#[fixed_stack_segment]
 pub fn wait_client() -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglWaitClient()) }
 }
 
+#[fixed_stack_segment]
 pub fn release_thread() -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglReleaseThread()) }
 }
 
+#[fixed_stack_segment]
 pub fn create_pbuffer_from_client_buffer(dpy: Display, buftype: EGLenum, buffer: EGLClientBuffer, config: Config, attrib_list: AttribList) -> Result<Surface,EGLenum> {
     unsafe {
         do unwrap_attrib_list(attrib_list) |attrib_list| {
@@ -359,22 +376,27 @@ pub fn create_pbuffer_from_client_buffer(dpy: Display, buftype: EGLenum, buffer:
     }
 }
 
+#[fixed_stack_segment]
 pub fn surface_attrib(dpy: Display, surface: Surface, attribute: EGLenum, value: EGLint) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglSurfaceAttrib(*dpy, *surface, attribute as EGLint, value)) }
 }
 
+#[fixed_stack_segment]
 pub fn bind_tex_image(dpy: Display, surface: Surface, buffer: EGLenum) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglBindTexImage(*dpy, *surface, buffer as EGLint)) }
 }
 
+#[fixed_stack_segment]
 pub fn release_tex_image(dpy: Display, surface: Surface, buffer: EGLenum) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglReleaseTexImage(*dpy, *surface, buffer as EGLint)) }
 }
 
+#[fixed_stack_segment]
 pub fn swap_interval(dpy: Display, interval: EGLint) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglSwapInterval(*dpy, interval)) }
 }
 
+#[fixed_stack_segment]
 pub fn create_context(dpy: Display, config: Config, share_context: Option<Context>, attrib_list: AttribList) -> Result<Context,EGLenum> {
     unsafe {
         let share_context = match share_context {
@@ -387,14 +409,17 @@ pub fn create_context(dpy: Display, config: Config, share_context: Option<Contex
     }
 }
 
+#[fixed_stack_segment]
 pub fn destroy_context(dpy: Display, ctx: Context) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglDestroyContext(*dpy, *ctx)) }
 }
 
+#[fixed_stack_segment]
 pub fn make_current(dpy: Display, draw: Surface, read: Surface, ctx: Context) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglMakeCurrent(*dpy, *draw, *read, *ctx)) }
 }
 
+#[fixed_stack_segment]
 pub fn get_current_context() -> Option<Context> {
     unsafe {
         let context = eglGetCurrentContext();
@@ -406,6 +431,7 @@ pub fn get_current_context() -> Option<Context> {
     }
 }
 
+#[fixed_stack_segment]
 fn get_current_surface(readdraw: EGLenum) -> Option<Surface> {
     unsafe {
         let surface = eglGetCurrentSurface(readdraw as EGLint);
@@ -425,6 +451,7 @@ pub fn get_current_draw_surface() -> Option<Surface> {
     get_current_surface(DRAW)
 }
 
+#[fixed_stack_segment]
 pub fn get_current_display() -> Option<Display> {
     unsafe {
         let display = eglGetCurrentDisplay();
@@ -436,6 +463,7 @@ pub fn get_current_display() -> Option<Display> {
     }
 }
 
+#[fixed_stack_segment]
 pub fn query_context(dpy: Display, ctx: Context, attribute: EGLenum) -> Result<EGLint,EGLenum> {
     unsafe {
         let mut value: EGLint = 0;
@@ -447,24 +475,29 @@ pub fn query_context(dpy: Display, ctx: Context, attribute: EGLenum) -> Result<E
     }
 }
 
+#[fixed_stack_segment]
 pub fn wait_gl() -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglWaitGL()) }
 }
 
+#[fixed_stack_segment]
 pub fn wait_native(engine: EGLint) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglWaitNative(engine)) }
 }
 
+#[fixed_stack_segment]
 pub fn swap_buffers(dpy: Display, surface: Surface) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglSwapBuffers(*dpy, *surface)) }
 }
 
+#[fixed_stack_segment]
 pub fn copy_buffers(dpy: Display, surface: Surface, target: EGLNativePixmapType) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglCopyBuffers(*dpy, *surface, target)) }
 }
 
+#[fixed_stack_segment]
 pub fn get_proc_address(procname: &str) -> *c_void {
-    unsafe { as_c_str(procname, |procname| eglGetProcAddress(procname)) }
+    unsafe { procname.to_c_str().with_ref(|procname| eglGetProcAddress(procname)) }
 }
 
 #[nolink]
