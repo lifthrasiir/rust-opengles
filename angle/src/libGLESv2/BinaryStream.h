@@ -11,6 +11,10 @@
 
 #include <string>
 #include <vector>
+// vvv rust-opengles-angle patch ahead
+#include <cstring>
+using std::memcpy;
+// ^^^ rust-opengles-angle patch behind
 
 #include "common/angleutils.h"
 
