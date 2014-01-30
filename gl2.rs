@@ -21,27 +21,6 @@ use std::str::raw::from_c_str;
 use std::mem::size_of;
 use std::vec::from_elem;
 
-// Linking
-#[nolink]
-#[cfg(target_os = "macos")]
-#[link(name = "OpenGL", kind = "framework")]
-extern { }
-
-#[nolink]
-#[cfg(target_os = "linux")]
-#[link(name = "GL")]
-extern { }
-
-#[nolink]
-#[cfg(target_os = "android")]
-#[link(name = "GLESv2")]
-extern { }
-
-#[nolink]
-#[cfg(target_os = "win32")]
-#[link_args="libGLESv2.dll libEGL.dll"]
-extern { }
-
 // Constants
 
 /* BeginMode */
@@ -1159,7 +1138,8 @@ pub mod apple {
     }
 }
 
-#[nolink]
+macro_rules! define_ffi(($link:attr) => (
+$link
 extern "system" {
 
 // Lower-level API
@@ -1482,6 +1462,18 @@ pub fn glEGLImageTargetTexture2DOES(target: GLenum, image: GLeglImageOES);
 pub fn glEGLImageTargetRenderbufferStorageOES(target: GLenum, image: GLeglImageOES);
 
 }
+))
+
+// Linking
+#[cfg(target_os = "macos")]
+define_ffi!(#[link(name = "OpenGL", kind = "framework")])
+
+#[cfg(target_os = "linux")]
+define_ffi!(#[link(name = "GL")])
+
+#[cfg(target_os = "android")]
+#[cfg(target_os = "win32")]
+define_ffi!(#[link(name = "GLESv2")])
 
 // Apple extensions
 #[cfg(target_os="macos")]

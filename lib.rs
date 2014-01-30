@@ -9,7 +9,7 @@
 
 #[crate_id = "github.com/mozilla-servo/rust-opengles#opengles:0.1"];
 
-#[feature(link_args)];
+#[feature(macro_rules)];
 
 extern mod std;
 

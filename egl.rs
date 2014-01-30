@@ -505,7 +505,7 @@ pub fn get_proc_address(procname: &str) -> *c_void {
     unsafe { procname.to_c_str().with_ref(|procname| eglGetProcAddress(procname)) }
 }
 
-#[nolink]
+#[link(name = "EGL")]
 extern "system" {
     pub fn eglGetError() -> EGLint;
     pub fn eglGetDisplay(display_id: EGLNativeDisplayType) -> EGLDisplay;
