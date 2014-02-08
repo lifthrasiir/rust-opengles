@@ -34,7 +34,7 @@ all:    libopengles.dummy
 	$(CC) $< -o $@ -c $(CFLAGS)
 
 libopengles.dummy: lib.rs $(RUST_SRC) $(ANGLE_DLLS)
-	$(RUSTC) $(RUSTFLAGS) $< --lib --out-dir .
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
 ifneq ($(ANGLE_SRC),)
@@ -57,6 +57,6 @@ check: opengles-test
 
 .PHONY: clean angle-clean
 clean: $(ANGLE_CLEAN)
-	rm -f *.o *.a *.so *.dylib *.dll *.dummy *-test
+	rm -f *.o *.a *.so *.dylib *.rlib *.dll *.dummy *-test
 angle-clean:
 	cd $(ANGLE_SRC) && $(MAKE) clean
