@@ -8,6 +8,7 @@
 // except according to those terms.
 
 #[crate_id = "github.com/mozilla-servo/rust-opengles#opengles:0.1"];
+#[crate_type = "lib"];
 
 #[feature(macro_rules)];
 
