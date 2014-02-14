@@ -750,7 +750,7 @@ pub fn get_shader_info_log(shader: GLuint) -> ~str {
 pub fn get_string(which: GLenum) -> ~str {
     unsafe {
         let llstr = glGetString(which);
-        if !ptr::is_null(llstr) {
+        if !llstr.is_null() {
             return from_c_str(llstr as *c_char);
         } else {
             return ~"";

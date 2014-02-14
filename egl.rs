@@ -10,7 +10,7 @@
 //! Bindings to EGL (currently limited to win32 platform)
 
 use std::libc::{c_uint, c_void, c_char, HANDLE};
-use std::ptr::{null, mut_null, is_null, to_mut_unsafe_ptr};
+use std::ptr::{null, mut_null, to_mut_unsafe_ptr};
 use std::str::raw::from_c_str;
 use std::vec::from_elem;
 
@@ -228,7 +228,7 @@ pub fn query_string(dpy: Display, name: EGLenum) -> ~str {
     let Display(dpy) = dpy;
     unsafe {
         let s = eglQueryString(dpy, name as EGLint);
-        if !is_null(s) {
+        if !s.is_null() {
             from_c_str(s as *c_char)
         } else {
             ~""
