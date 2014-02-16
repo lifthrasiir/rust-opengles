@@ -10,7 +10,7 @@
 //! Bindings to EGL (currently limited to win32 platform)
 
 use std::libc::{c_uint, c_void, c_char, HANDLE};
-use std::ptr::{null, mut_null, to_mut_unsafe_ptr};
+use std::ptr::{null, mut_null};
 use std::str::raw::from_c_str;
 use std::vec::from_elem;
 
@@ -211,7 +211,7 @@ pub fn initialize(dpy: Display) -> Result<(int,int),EGLenum> {
     unsafe {
         let mut major = 0;
         let mut minor = 0;
-        if eglInitialize(dpy, to_mut_unsafe_ptr(&mut major), to_mut_unsafe_ptr(&mut minor)) == TRUE {
+        if eglInitialize(dpy, &mut major, &mut minor) == TRUE {
             Ok((major as int, minor as int))
         } else {
             wrap_error()
@@ -240,12 +240,11 @@ pub fn num_configs(dpy: Display, attrib_list: AttribList) -> Result<int,EGLenum>
     let Display(dpy) = dpy;
     unsafe {
         let mut actual: EGLint = 0;
-        let ll_actual = to_mut_unsafe_ptr(&mut actual);
         let ret = if attrib_list.is_empty() {
-            eglGetConfigs(dpy, mut_null(), 0, ll_actual)
+            eglGetConfigs(dpy, mut_null(), 0, &mut actual)
         } else {
             unwrap_attrib_list(attrib_list, |attrib_list| {
-                eglChooseConfig(dpy, attrib_list, mut_null(), 0, ll_actual)
+                eglChooseConfig(dpy, attrib_list, mut_null(), 0, &mut actual)
             })
         };
         if ret == TRUE {
@@ -271,12 +270,11 @@ pub fn get_configs(dpy: Display, attrib_list: AttribList, num: Option<uint>) -> 
         let mut actual: EGLint = 0;
         let ll_configs = configs.as_mut_ptr();
         let ll_requested = requested as EGLint;
-        let ll_actual = to_mut_unsafe_ptr(&mut actual);
         let ret = if attrib_list.is_empty() {
-            eglGetConfigs(dpy, ll_configs, ll_requested, ll_actual)
+            eglGetConfigs(dpy, ll_configs, ll_requested, &mut actual)
         } else {
             unwrap_attrib_list(attrib_list, |attrib_list| {
-                eglChooseConfig(dpy, attrib_list, ll_configs, ll_requested, ll_actual)
+                eglChooseConfig(dpy, attrib_list, ll_configs, ll_requested, &mut actual)
             })
         };
         if ret == TRUE {
@@ -293,7 +291,7 @@ pub fn get_config_attrib(dpy: Display, config: Config, attribute: EGLenum) -> Re
     let Config(config) = config;
     unsafe {
         let mut ret: EGLint = 0;
-        if eglGetConfigAttrib(dpy, config, attribute as EGLint, to_mut_unsafe_ptr(&mut ret)) == TRUE {
+        if eglGetConfigAttrib(dpy, config, attribute as EGLint, &mut ret) == TRUE {
             Ok(ret)
         } else {
             wrap_error()
@@ -342,7 +340,7 @@ pub fn query_surface(dpy: Display, surface: Surface, attribute: EGLenum) -> Resu
     let Surface(surface) = surface;
     unsafe {
         let mut value: EGLint = 0;
-        if eglQuerySurface(dpy, surface, attribute as EGLint, to_mut_unsafe_ptr(&mut value)) == TRUE {
+        if eglQuerySurface(dpy, surface, attribute as EGLint, &mut value) == TRUE {
             Ok(value)
         } else {
             wrap_error()
@@ -473,7 +471,7 @@ pub fn query_context(dpy: Display, ctx: Context, attribute: EGLenum) -> Result<E
     let Context(ctx) = ctx;
     unsafe {
         let mut value: EGLint = 0;
-        if eglQueryContext(dpy, ctx, attribute as EGLint, to_mut_unsafe_ptr(&mut value)) == TRUE {
+        if eglQueryContext(dpy, ctx, attribute as EGLint, &mut value) == TRUE {
             Ok(value)
         } else {
             wrap_error()

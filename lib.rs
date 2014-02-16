@@ -12,8 +12,6 @@
 
 #[feature(macro_rules)];
 
-extern mod std;
-
 pub mod gl2;
 
 #[cfg(target_os="linux")]
