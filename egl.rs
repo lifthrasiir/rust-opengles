@@ -12,7 +12,6 @@
 use std::libc::{c_uint, c_void, c_char, HANDLE};
 use std::ptr::{null, mut_null};
 use std::str::raw::from_c_str;
-use std::vec::from_elem;
 
 pub type EGLint = i32;
 pub type EGLBoolean = c_uint;
@@ -193,7 +192,7 @@ fn wrap_context(context: EGLContext) -> Result<Context,EGLenum> {
 }
 
 fn unwrap_attrib_list<T>(attrib_list: AttribList, f: |*EGLint| -> T) -> T {
-    let mut unwrapped = ~[];
+    let mut unwrapped = Vec::new();
     for &(attribute, value) in attrib_list.iter() {
         unwrapped.push(attribute as EGLint);
         unwrapped.push(value);
@@ -255,7 +254,7 @@ pub fn num_configs(dpy: Display, attrib_list: AttribList) -> Result<int,EGLenum>
     }
 }
 
-pub fn get_configs(dpy: Display, attrib_list: AttribList, num: Option<uint>) -> Result<~[Config],EGLenum> {
+pub fn get_configs(dpy: Display, attrib_list: AttribList, num: Option<uint>) -> Result<Vec<Config>,EGLenum> {
     let Display(dpy) = dpy;
     unsafe {
         let requested = match num {
@@ -265,7 +264,7 @@ pub fn get_configs(dpy: Display, attrib_list: AttribList, num: Option<uint>) -> 
                 Err(err) => return Err(err)
             }
         };
-        let mut configs = from_elem(requested, null());
+        let mut configs = Vec::from_elem(requested, null());
 
         let mut actual: EGLint = 0;
         let ll_configs = configs.as_mut_ptr();
