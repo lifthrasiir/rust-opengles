@@ -7,10 +7,12 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[crate_id = "github.com/mozilla-servo/rust-opengles#opengles:0.1"];
-#[crate_type = "lib"];
+#![crate_id = "github.com/mozilla-servo/rust-opengles#opengles:0.1"]
+#![crate_type = "lib"]
 
-#[feature(macro_rules)];
+#![feature(macro_rules)]
+
+extern crate std;
 
 pub mod gl2;
 

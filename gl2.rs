@@ -1129,8 +1129,8 @@ pub mod apple {
     }
 }
 
-macro_rules! define_ffi(($link:attr) => (
-$link
+macro_rules! define_ffi((#[$link:meta]) => (
+#[$link]
 extern "system" {
 
 // Lower-level API

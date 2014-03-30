@@ -34,7 +34,7 @@ all:    libopengles.dummy
 	$(CC) $< -o $@ -c $(CFLAGS)
 
 libopengles.dummy: lib.rs $(RUST_SRC) $(ANGLE_DLLS)
-	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
+	$(RUSTC) $(RUSTFLAGS) $< --crate-type=lib --out-dir .
 	touch $@
 
 ifneq ($(ANGLE_SRC),)
