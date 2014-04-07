@@ -9,7 +9,7 @@
 
 //! Bindings to EGL (currently limited to win32 platform)
 
-use std::libc::{c_uint, c_void, c_char, HANDLE};
+use libc::{c_uint, c_void, c_char, HANDLE};
 use std::ptr::{null, mut_null};
 use std::str::raw::from_c_str;
 

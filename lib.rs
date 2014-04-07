@@ -9,10 +9,13 @@
 
 #![crate_id = "github.com/mozilla-servo/rust-opengles#opengles:0.1"]
 #![crate_type = "lib"]
+#![crate_type = "dylib"]
+#![crate_type = "rlib"]
 
 #![feature(macro_rules)]
 
 extern crate std;
+extern crate libc;
 
 pub mod gl2;
 
