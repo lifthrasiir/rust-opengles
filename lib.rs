@@ -14,6 +14,7 @@
 
 #![feature(macro_rules)]
 
+extern crate libc;
 extern crate std;
 extern crate libc;
 

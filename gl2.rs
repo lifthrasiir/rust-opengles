@@ -18,6 +18,7 @@ use std::ptr;
 use std::str::from_utf8;
 use std::str::raw::from_c_str;
 use std::mem::size_of;
+use std::vec::Vec;
 
 // Constants
 
@@ -751,7 +752,7 @@ pub fn get_string(which: GLenum) -> ~str {
         if !llstr.is_null() {
             return from_c_str(llstr as *c_char);
         } else {
-            return ~"";
+            return "".to_owned();
         }
     }
 }
@@ -843,11 +844,11 @@ pub fn read_pixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: 
     let colors = match format {
         RGB => 3,
         RGBA => 3,
-        _ => fail!(~"unsupported format for read_pixels"),
+        _ => fail!("unsupported format for read_pixels"),
     };
     let depth = match pixel_type {
         UNSIGNED_BYTE => 1,
-        _ => fail!(~"unsupported pixel_type for read_pixels"),
+        _ => fail!("unsupported pixel_type for read_pixels"),
     };
 
     let len = (width * height * colors * depth) as uint;
