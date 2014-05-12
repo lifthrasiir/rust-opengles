@@ -11,8 +11,8 @@
 
 use libc::{c_uint, c_uchar, c_void, c_char, int8_t, c_short, c_int, uint8_t, c_ushort};
 use libc::{int32_t, intptr_t, ssize_t};
-use std::cast;
-use std::cast::transmute;
+use std::mem;
+use std::mem::transmute;
 use std::cmp;
 use std::ptr;
 use std::str::from_utf8;
@@ -574,7 +574,7 @@ pub fn draw_elements(mode: GLenum, count: GLsizei, element_type: GLenum, indices
                                   },
                                   element_type,
                                   match indices {
-                                    Some(ref i) => cast::transmute(&i[0]),
+                                    Some(ref i) => mem::transmute(&i[0]),
                                     None => ptr::null(),
                                   })
     }
@@ -599,7 +599,7 @@ pub fn draw_elements_instanced(mode: GLenum, count: GLsizei, element_type: GLenu
                                     },
                                     element_type,
                                     match indices {
-                                      Some(ref i) => cast::transmute(&i[0]),
+                                      Some(ref i) => mem::transmute(&i[0]),
                                       None => ptr::null(),
                                     }, 
                                     primcount);
@@ -995,7 +995,7 @@ pub fn uniform_matrix_2fv(location: GLint, transpose: bool, value: &[GLfloat]) {
         glUniformMatrix2fv(location,
                                1 as GLsizei,
                                transpose as GLboolean,
-                               cast::transmute(&value[0]));
+                               mem::transmute(&value[0]));
     }
 }
 
@@ -1004,7 +1004,7 @@ pub fn uniform_matrix_3fv(location: GLint, transpose: bool, value: &[GLfloat]) {
         glUniformMatrix3fv(location,
                                1 as GLsizei,
                                transpose as GLboolean,
-                               cast::transmute(&value[0]));
+                               mem::transmute(&value[0]));
     }
 }
 
@@ -1013,7 +1013,7 @@ pub fn uniform_matrix_4fv(location: GLint, transpose: bool, value: &[GLfloat]) {
         glUniformMatrix4fv(location,
                                1 as GLsizei,
                                transpose as GLboolean,
-                               cast::transmute(&value[0]));
+                               mem::transmute(&value[0]));
     }
 }
 
@@ -1123,7 +1123,7 @@ pub fn egl_image_target_renderbuffer_storage_oes(target: GLenum, image: GLeglIma
 #[cfg(target_os="macos")]
 pub mod apple {
     use super::{GLenum, GLsizei};
-    use std::cast::transmute;
+    use std::mem::transmute;
 
     pub unsafe fn texture_range(target: GLenum, buffer: &[u8]) {
         super::glTextureRangeAPPLE(target, buffer.len() as GLsizei, transmute(buffer.as_ptr()));
