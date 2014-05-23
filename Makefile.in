@@ -2,6 +2,7 @@ VPATH=%VPATH%
 
 RUSTC ?= rustc
 RUSTFLAGS ?=
+EXT_DEPS ?=
 
 ifeq ($(shell uname -s),Darwin)
 ifeq ($(shell sw_vers | grep -c 10.6),1)
@@ -33,7 +34,7 @@ all:    libopengles.dummy
 %.o:	%.c
 	$(CC) $< -o $@ -c $(CFLAGS)
 
-libopengles.dummy: lib.rs $(RUST_SRC) $(ANGLE_DLLS)
+libopengles.dummy: lib.rs $(RUST_SRC) $(ANGLE_DLLS) $(EXT_DEPS)
 	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
