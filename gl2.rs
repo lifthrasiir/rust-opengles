@@ -712,7 +712,7 @@ pub fn get_integer_v(pname: GLenum, result: &mut [GLint]) {
     }
 }
 
-pub fn get_program_info_log(program: GLuint) -> StrBuf {
+pub fn get_program_info_log(program: GLuint) -> String {
     unsafe {
         let mut result = Vec::from_elem(1024u, 0u8);
         let result_len: GLsizei = 0 as GLsizei;
@@ -733,7 +733,7 @@ pub fn get_program_iv(program: GLuint, pname: GLenum) -> GLint {
     }
 }
 
-pub fn get_shader_info_log(shader: GLuint) -> StrBuf {
+pub fn get_shader_info_log(shader: GLuint) -> String {
     unsafe {
         let mut result = Vec::from_elem(1024u, 0u8);
         let result_len: GLsizei = 0 as GLsizei;
@@ -746,7 +746,7 @@ pub fn get_shader_info_log(shader: GLuint) -> StrBuf {
     }
 }
 
-pub fn get_string(which: GLenum) -> StrBuf {
+pub fn get_string(which: GLenum) -> String {
     unsafe {
         let llstr = glGetString(which);
         if !llstr.is_null() {

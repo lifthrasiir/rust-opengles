@@ -223,7 +223,7 @@ pub fn terminate(dpy: Display) -> Result<(),EGLenum> {
     unsafe { wrap_boolean(eglTerminate(dpy)) }
 }
 
-pub fn query_string(dpy: Display, name: EGLenum) -> StrBuf {
+pub fn query_string(dpy: Display, name: EGLenum) -> String {
     let Display(dpy) = dpy;
     unsafe {
         let s = eglQueryString(dpy, name as EGLint);
