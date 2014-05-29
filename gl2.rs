@@ -721,7 +721,7 @@ pub fn get_program_info_log(program: GLuint) -> String {
                             &result_len,
                             result.as_ptr() as *GLchar);
         result.truncate(if result_len > 0 {result_len-1} else {0} as uint);
-        from_utf8(result.as_slice()).unwrap().to_owned()
+        from_utf8(result.as_slice()).unwrap().to_string()
     }
 }
 
@@ -742,7 +742,7 @@ pub fn get_shader_info_log(shader: GLuint) -> String {
                            &result_len,
                            result.as_ptr() as *GLchar);
         result.truncate(if result_len > 0 {result_len-1} else {0} as uint);
-        from_utf8(result.as_slice()).unwrap().to_owned()
+        from_utf8(result.as_slice()).unwrap().to_string()
     }
 }
 
@@ -752,7 +752,7 @@ pub fn get_string(which: GLenum) -> String {
         if !llstr.is_null() {
             return from_c_str(llstr as *c_char);
         } else {
-            return "".to_owned();
+            return "".to_string();
         }
     }
 }

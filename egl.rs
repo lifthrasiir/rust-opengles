@@ -230,7 +230,7 @@ pub fn query_string(dpy: Display, name: EGLenum) -> String {
         if !s.is_null() {
             from_c_str(s as *c_char)
         } else {
-            "".to_owned()
+            "".to_string()
         }
     }
 }
