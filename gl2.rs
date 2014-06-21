@@ -12,7 +12,6 @@
 use libc::{c_uint, c_uchar, c_void, c_char, int8_t, c_short, c_int, uint8_t, c_ushort};
 use libc::{int32_t, intptr_t, ssize_t};
 use std::mem;
-use std::mem::transmute;
 use std::cmp;
 use std::ptr;
 use std::str::from_utf8;
@@ -895,7 +894,7 @@ pub fn tex_image_2d(target: GLenum,
     match opt_data {
         Some(data) => {
             unsafe {
-                let pdata = transmute(data.as_ptr());
+                let pdata = mem::transmute(data.as_ptr());
                 glTexImage2D(target, level, internal_format, width, height, border, format, ty,
                                  pdata);
             }
@@ -922,7 +921,7 @@ pub fn tex_sub_image_2d(target: GLenum,
     match opt_data {
         Some(data) => {
             unsafe {
-                let pdata = transmute(data.as_ptr());
+                let pdata = mem::transmute(data.as_ptr());
                 glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, ty,
                                    pdata);
             }
@@ -1040,7 +1039,7 @@ pub fn vertex_attrib_pointer_f32(index: GLuint,
                                   FLOAT,
                                   normalized as GLboolean,
                                   stride,
-                                  transmute(offset as uint));
+                                  mem::transmute(offset as uint));
     }
 }
 
@@ -1055,7 +1054,7 @@ pub fn vertex_attrib_pointer_i8(index: GLuint,
                                   BYTE,
                                   normalized as GLboolean,
                                   stride,
-                                  transmute(offset as uint));
+                                  mem::transmute(offset as uint));
     }
 }
 
@@ -1070,7 +1069,7 @@ pub fn vertex_attrib_pointer_i32(index: GLuint,
                                   INT,
                                   normalized as GLboolean,
                                   stride,
-                                  transmute(offset as uint));
+                                  mem::transmute(offset as uint));
     }
 }
 
@@ -1085,7 +1084,7 @@ pub fn vertex_attrib_pointer_u8(index: GLuint,
                                   UNSIGNED_BYTE,
                                   normalized as GLboolean,
                                   stride,
-                                  transmute(offset as uint));
+                                  mem::transmute(offset as uint));
     }
 }
 
@@ -1123,10 +1122,10 @@ pub fn egl_image_target_renderbuffer_storage_oes(target: GLenum, image: GLeglIma
 #[cfg(target_os="macos")]
 pub mod apple {
     use super::{GLenum, GLsizei};
-    use std::mem::transmute;
+    use std::mem;
 
     pub unsafe fn texture_range(target: GLenum, buffer: &[u8]) {
-        super::glTextureRangeAPPLE(target, buffer.len() as GLsizei, transmute(buffer.as_ptr()));
+        super::glTextureRangeAPPLE(target, buffer.len() as GLsizei, mem::transmute(buffer.as_ptr()));
     }
 }
 
