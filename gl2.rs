@@ -719,7 +719,7 @@ pub fn get_program_info_log(program: GLuint) -> String {
                             1024 as GLsizei,
                             &result_len,
                             result.as_ptr() as *GLchar);
-        result.truncate(if result_len > 0 {result_len-1} else {0} as uint);
+        result.truncate(if result_len > 0 {result_len as uint - 1} else {0});
         from_utf8(result.as_slice()).unwrap().to_string()
     }
 }
@@ -740,7 +740,7 @@ pub fn get_shader_info_log(shader: GLuint) -> String {
                            1024 as GLsizei,
                            &result_len,
                            result.as_ptr() as *GLchar);
-        result.truncate(if result_len > 0 {result_len-1} else {0} as uint);
+        result.truncate(if result_len > 0 {result_len as uint - 1} else {0});
         from_utf8(result.as_slice()).unwrap().to_string()
     }
 }
