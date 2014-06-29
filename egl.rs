@@ -16,11 +16,11 @@ use std::str::raw::from_c_str;
 pub type EGLint = i32;
 pub type EGLBoolean = c_uint;
 pub type EGLenum = c_uint;
-pub type EGLConfig = *c_void;
-pub type EGLContext = *c_void;
-pub type EGLDisplay = *c_void;
-pub type EGLSurface = *c_void;
-pub type EGLClientBuffer = *c_void;
+pub type EGLConfig = *const c_void;
+pub type EGLContext = *const c_void;
+pub type EGLDisplay = *const c_void;
+pub type EGLSurface = *const c_void;
+pub type EGLClientBuffer = *const c_void;
 
 pub type AttribList<'r> = &'r [(EGLenum, EGLint)];
 pub struct Config(EGLConfig);
@@ -191,7 +191,7 @@ fn wrap_context(context: EGLContext) -> Result<Context,EGLenum> {
     }
 }
 
-fn unwrap_attrib_list<T>(attrib_list: AttribList, f: |*EGLint| -> T) -> T {
+fn unwrap_attrib_list<T>(attrib_list: AttribList, f: |*const EGLint| -> T) -> T {
     let mut unwrapped = Vec::new();
     for &(attribute, value) in attrib_list.iter() {
         unwrapped.push(attribute as EGLint);
@@ -228,7 +228,7 @@ pub fn query_string(dpy: Display, name: EGLenum) -> String {
     unsafe {
         let s = eglQueryString(dpy, name as EGLint);
         if !s.is_null() {
-            from_c_str(s as *c_char)
+            from_c_str(s as *const c_char)
         } else {
             "".to_string()
         }
@@ -498,7 +498,7 @@ pub fn copy_buffers(dpy: Display, surface: Surface, target: EGLNativePixmapType)
     unsafe { wrap_boolean(eglCopyBuffers(dpy, surface, target)) }
 }
 
-pub fn get_proc_address(procname: &str) -> *c_void {
+pub fn get_proc_address(procname: &str) -> *const c_void {
     unsafe { procname.to_c_str().with_ref(|procname| eglGetProcAddress(procname)) }
 }
 
@@ -508,25 +508,25 @@ extern "system" {
     pub fn eglGetDisplay(display_id: EGLNativeDisplayType) -> EGLDisplay;
     pub fn eglInitialize(dpy: EGLDisplay, major: *mut EGLint, minor: *mut EGLint) -> EGLBoolean;
     pub fn eglTerminate(dpy: EGLDisplay) -> EGLBoolean;
-    pub fn eglQueryString(dpy: EGLDisplay, name: EGLint) -> *c_char;
+    pub fn eglQueryString(dpy: EGLDisplay, name: EGLint) -> *const c_char;
     pub fn eglGetConfigs(dpy: EGLDisplay, configs: *mut EGLConfig, config_size: EGLint, num_config: *mut EGLint) -> EGLBoolean;
-    pub fn eglChooseConfig(dpy: EGLDisplay, attrib_list: *EGLint, configs: *mut EGLConfig, config_size: EGLint, num_config: *mut EGLint) -> EGLBoolean;
+    pub fn eglChooseConfig(dpy: EGLDisplay, attrib_list: *const EGLint, configs: *mut EGLConfig, config_size: EGLint, num_config: *mut EGLint) -> EGLBoolean;
     pub fn eglGetConfigAttrib(dpy: EGLDisplay, config: EGLConfig, attribute: EGLint, value: *mut EGLint) -> EGLBoolean;
-    pub fn eglCreateWindowSurface(dpy: EGLDisplay, config: EGLConfig, win: EGLNativeWindowType, attrib_list: *EGLint) -> EGLSurface;
-    pub fn eglCreatePbufferSurface(dpy: EGLDisplay, config: EGLConfig, attrib_list: *EGLint) -> EGLSurface;
-    pub fn eglCreatePixmapSurface(dpy: EGLDisplay, config: EGLConfig, pixmap: EGLNativePixmapType, attrib_list: *EGLint) -> EGLSurface;
+    pub fn eglCreateWindowSurface(dpy: EGLDisplay, config: EGLConfig, win: EGLNativeWindowType, attrib_list: *const EGLint) -> EGLSurface;
+    pub fn eglCreatePbufferSurface(dpy: EGLDisplay, config: EGLConfig, attrib_list: *const EGLint) -> EGLSurface;
+    pub fn eglCreatePixmapSurface(dpy: EGLDisplay, config: EGLConfig, pixmap: EGLNativePixmapType, attrib_list: *const EGLint) -> EGLSurface;
     pub fn eglDestroySurface(dpy: EGLDisplay, surface: EGLSurface) -> EGLBoolean;
     pub fn eglQuerySurface(dpy: EGLDisplay, surface: EGLSurface, attribute: EGLint, value: *mut EGLint) -> EGLBoolean;
     pub fn eglBindAPI(api: EGLenum) -> EGLBoolean;
     pub fn eglQueryAPI() -> EGLenum;
     pub fn eglWaitClient() -> EGLBoolean;
     pub fn eglReleaseThread() -> EGLBoolean;
-    pub fn eglCreatePbufferFromClientBuffer(dpy: EGLDisplay, buftype: EGLenum, buffer: EGLClientBuffer, config: EGLConfig, attrib_list: *EGLint) -> EGLSurface;
+    pub fn eglCreatePbufferFromClientBuffer(dpy: EGLDisplay, buftype: EGLenum, buffer: EGLClientBuffer, config: EGLConfig, attrib_list: *const EGLint) -> EGLSurface;
     pub fn eglSurfaceAttrib(dpy: EGLDisplay, surface: EGLSurface, attribute: EGLint, value: EGLint) -> EGLBoolean;
     pub fn eglBindTexImage(dpy: EGLDisplay, surface: EGLSurface, buffer: EGLint) -> EGLBoolean;
     pub fn eglReleaseTexImage(dpy: EGLDisplay, surface: EGLSurface, buffer: EGLint) -> EGLBoolean;
     pub fn eglSwapInterval(dpy: EGLDisplay, interval: EGLint) -> EGLBoolean;
-    pub fn eglCreateContext(dpy: EGLDisplay, config: EGLConfig, share_context: EGLContext, attrib_list: *EGLint) -> EGLContext;
+    pub fn eglCreateContext(dpy: EGLDisplay, config: EGLConfig, share_context: EGLContext, attrib_list: *const EGLint) -> EGLContext;
     pub fn eglDestroyContext(dpy: EGLDisplay, ctx: EGLContext) -> EGLBoolean;
     pub fn eglMakeCurrent(dpy: EGLDisplay, draw: EGLSurface, read: EGLSurface, ctx: EGLContext) -> EGLBoolean;
     pub fn eglGetCurrentContext() -> EGLContext;
@@ -537,6 +537,6 @@ extern "system" {
     pub fn eglWaitNative(engine: EGLint) -> EGLBoolean;
     pub fn eglSwapBuffers(dpy: EGLDisplay, surface: EGLSurface) -> EGLBoolean;
     pub fn eglCopyBuffers(dpy: EGLDisplay, surface: EGLSurface, target: EGLNativePixmapType) -> EGLBoolean;
-    pub fn eglGetProcAddress(procname: *c_char) -> *c_void;
+    pub fn eglGetProcAddress(procname: *const c_char) -> *const c_void;
 }
 
