@@ -499,7 +499,10 @@ pub fn copy_buffers(dpy: Display, surface: Surface, target: EGLNativePixmapType)
 }
 
 pub fn get_proc_address(procname: &str) -> *const c_void {
-    unsafe { procname.to_c_str().with_ref(|procname| eglGetProcAddress(procname)) }
+    unsafe {
+        let procname = procname.to_c_str();
+        eglGetProcAddress(procname.as_ptr())
+    }
 }
 
 #[link(name = "EGL")]
