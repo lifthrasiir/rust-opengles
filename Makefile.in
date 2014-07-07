@@ -27,16 +27,17 @@ ANGLE_CLEAN =
 endif
 
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
+LIB = ./libopengles.rlib
+TEST_BIN = ./opengles-test
 
 .PHONY: all
-all:    libopengles.dummy
+all:    $(LIB)
 
 %.o:	%.c
 	$(CC) $< -o $@ -c $(CFLAGS)
 
-libopengles.dummy: lib.rs $(RUST_SRC) $(ANGLE_DLLS) $(EXT_DEPS)
+$(LIB): lib.rs $(RUST_SRC) $(ANGLE_DLLS) $(EXT_DEPS)
 	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
-	touch $@
 
 ifneq ($(ANGLE_SRC),)
 libEGL.dll: $(ANGLE_SRC)/libEGL.dll
@@ -49,15 +50,16 @@ $(ANGLE_SRC)/libGLESv2.dll:
 	cd $(ANGLE_SRC) && $(MAKE) libGLESv2.dll
 endif
 
-opengles-test: lib.rs $(RUST_SRC)
+$(TEST_BIN): lib.rs $(RUST_SRC)
 	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
 
 .PHONY: check
-check: opengles-test
-	./opengles-test $(TEST)
+check: $(TEST_BIN)
+	$(TEST_BIN) $(TEST)
 
-.PHONY: clean angle-clean
-clean: $(ANGLE_CLEAN)
+.PHONY: clean clean-deps angle-clean
+clean:
 	rm -f *.o *.a *.so *.dylib *.rlib *.dll *.dummy *-test
+clean-deps: clean angle-clean
 angle-clean:
 	cd $(ANGLE_SRC) && $(MAKE) clean
