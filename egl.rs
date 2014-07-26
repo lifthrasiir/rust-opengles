@@ -11,7 +11,7 @@
 
 use libc::{c_uint, c_void, c_char, HANDLE};
 use std::ptr::{null, mut_null};
-use std::str::raw::from_c_str;
+use std::string::raw::from_buf;
 
 pub type EGLint = i32;
 pub type EGLBoolean = c_uint;
@@ -228,7 +228,7 @@ pub fn query_string(dpy: Display, name: EGLenum) -> String {
     unsafe {
         let s = eglQueryString(dpy, name as EGLint);
         if !s.is_null() {
-            from_c_str(s as *const c_char)
+            from_buf(s as *const u8)
         } else {
             "".to_string()
         }
