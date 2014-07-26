@@ -13,15 +13,11 @@ use libc::{c_char, c_int, c_ulong};
 
 // Types
 
-pub struct Display {
-    opaque: (),
-}
+pub enum Display {}
 
 pub type GLXDrawable = c_ulong;
 
-pub struct __GLXFBConfig {
-    opaque: (),
-}
+pub enum __GLXFBConfig {}
 
 pub type GLXFBConfig = *const __GLXFBConfig;
 
@@ -29,9 +25,7 @@ pub type GLXPixmap = c_ulong;
 
 pub type Pixmap = c_ulong;
 
-pub struct __XVisualInfo {
-    opaque: (),
-}
+pub enum __XVisualInfo {}
 
 pub type XVisualInfo = *const __XVisualInfo;
 
