@@ -24,6 +24,6 @@ pub mod glx;
 #[cfg(target_os="macos")]
 pub mod cgl;
 
-#[cfg(target_os="win32")]
+#[cfg(target_os="windows")]
 pub mod egl;
 

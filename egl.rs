@@ -28,9 +28,9 @@ pub struct Context(EGLContext);
 pub struct Display(EGLDisplay);
 pub struct Surface(EGLSurface);
 
-#[cfg(target_os="win32")] pub type EGLNativeDisplayType = HANDLE;
-#[cfg(target_os="win32")] pub type EGLNativePixmapType = HANDLE;
-#[cfg(target_os="win32")] pub type EGLNativeWindowType = HANDLE;
+#[cfg(target_os="windows")] pub type EGLNativeDisplayType = HANDLE;
+#[cfg(target_os="windows")] pub type EGLNativePixmapType = HANDLE;
+#[cfg(target_os="windows")] pub type EGLNativeWindowType = HANDLE;
 
 pub static FALSE: EGLBoolean = 0;
 pub static TRUE: EGLBoolean = 1;
