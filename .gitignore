@@ -15,3 +15,5 @@ Makefile
 doc
 angle/src/*.dll
 angle/src/*.a
+libopengles-*.so
+/doc

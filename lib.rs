@@ -8,8 +8,6 @@
 // except according to those terms.
 
 #![crate_name = "opengles"]
-#![crate_type = "lib"]
-#![crate_type = "dylib"]
 #![crate_type = "rlib"]
 
 #![feature(macro_rules)]

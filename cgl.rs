@@ -14,11 +14,11 @@
 use gl2::{GLenum, GLint, GLsizei, GLuint};
 use libc::{c_void, c_int};
 
-pub type CGLContextObj = *const c_void;
+pub type CGLContextObj = *mut c_void;
 pub type CGLError = c_int;
 pub type CGLPixelFormatAttribute = c_int;
-pub type CGLPixelFormatObj = *const c_void;
-pub type IOSurfaceRef = *const c_void;
+pub type CGLPixelFormatObj = *mut c_void;
+pub type IOSurfaceRef = *mut c_void;
 
 pub static kCGLNoError: CGLError = 0;
 
@@ -122,7 +122,7 @@ extern {
     pub fn CGLDestroyPixelFormat(pix: CGLPixelFormatObj);
 
     // Context functions
-    pub fn CGLCreateContext(pix: CGLPixelFormatObj, share: CGLContextObj, ctx: *const CGLContextObj) ->
+    pub fn CGLCreateContext(pix: CGLPixelFormatObj, share: CGLContextObj, ctx: *mut CGLContextObj) ->
                             CGLError;
     pub fn CGLGetPixelFormat(ctx: CGLContextObj) -> CGLPixelFormatObj;
 
