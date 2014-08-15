@@ -571,7 +571,7 @@ pub fn draw_elements(mode: GLenum, count: GLsizei, element_type: GLenum, indices
                                   },
                                   element_type,
                                   match indices {
-                                    Some(ref i) => mem::transmute(&i[0]),
+                                    Some(ref i) => i.as_ptr() as *const _,
                                     None => ptr::null(),
                                   })
     }
@@ -596,7 +596,7 @@ pub fn draw_elements_instanced(mode: GLenum, count: GLsizei, element_type: GLenu
                                     },
                                     element_type,
                                     match indices {
-                                      Some(ref i) => mem::transmute(&i[0]),
+                                      Some(ref i) => i.as_ptr(),
                                       None => ptr::null(),
                                     }, 
                                     primcount);
@@ -888,7 +888,7 @@ pub fn tex_image_2d(target: GLenum,
     match opt_data {
         Some(data) => {
             unsafe {
-                let pdata = mem::transmute(data.as_ptr());
+                let pdata = data.as_ptr() as *const _;
                 glTexImage2D(target, level, internal_format, width, height, border, format, ty,
                                  pdata);
             }
@@ -915,7 +915,7 @@ pub fn tex_sub_image_2d(target: GLenum,
     match opt_data {
         Some(data) => {
             unsafe {
-                let pdata = mem::transmute(data.as_ptr());
+                let pdata = data.as_ptr() as *const _;
                 glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, ty,
                                    pdata);
             }
@@ -988,7 +988,7 @@ pub fn uniform_matrix_2fv(location: GLint, transpose: bool, value: &[GLfloat]) {
         glUniformMatrix2fv(location,
                                1 as GLsizei,
                                transpose as GLboolean,
-                               mem::transmute(&value[0]));
+                               value.as_ptr());
     }
 }
 
@@ -997,7 +997,7 @@ pub fn uniform_matrix_3fv(location: GLint, transpose: bool, value: &[GLfloat]) {
         glUniformMatrix3fv(location,
                                1 as GLsizei,
                                transpose as GLboolean,
-                               mem::transmute(&value[0]));
+                               value.as_ptr());
     }
 }
 
@@ -1006,7 +1006,7 @@ pub fn uniform_matrix_4fv(location: GLint, transpose: bool, value: &[GLfloat]) {
         glUniformMatrix4fv(location,
                                1 as GLsizei,
                                transpose as GLboolean,
-                               mem::transmute(&value[0]));
+                               value.as_ptr());
     }
 }
 
@@ -1368,51 +1368,51 @@ pub fn glTexImage2D(target: GLenum, level: GLint, internalformat: GLint, width: 
 
 pub fn glTexParameterf(target: GLenum, pname: GLenum, param: GLfloat);
 
-pub fn glTexParameterfv(target: GLenum, pname: GLenum, params: *mut GLfloat);
+pub fn glTexParameterfv(target: GLenum, pname: GLenum, params: *const GLfloat);
 
 pub fn glTexParameteri(target: GLenum, pname: GLenum, param: GLint);
 
-pub fn glTexParameteriv(target: GLenum, pname: GLenum, params: *mut GLint);
+pub fn glTexParameteriv(target: GLenum, pname: GLenum, params: *const GLint);
 
 pub fn glTexSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, _type: GLenum, pixels: *const GLvoid);
 
 pub fn glUniform1f(location: GLint, x: GLfloat);
 
-pub fn glUniform1fv(location: GLint, count: GLsizei, v: *mut GLfloat);
+pub fn glUniform1fv(location: GLint, count: GLsizei, v: *const GLfloat);
 
 pub fn glUniform1i(location: GLint, x: GLint);
 
-pub fn glUniform1iv(location: GLint, count: GLsizei, v: *mut GLint);
+pub fn glUniform1iv(location: GLint, count: GLsizei, v: *const GLint);
 
 pub fn glUniform2f(location: GLint, x: GLfloat, y: GLfloat);
 
-pub fn glUniform2fv(location: GLint, count: GLsizei, v: *mut GLfloat);
+pub fn glUniform2fv(location: GLint, count: GLsizei, v: *const GLfloat);
 
 pub fn glUniform2i(location: GLint, x: GLint, y: GLint);
 
-pub fn glUniform2iv(location: GLint, count: GLsizei, v: *mut GLint);
+pub fn glUniform2iv(location: GLint, count: GLsizei, v: *const GLint);
 
 pub fn glUniform3f(location: GLint, x: GLfloat, y: GLfloat, z: GLfloat);
 
-pub fn glUniform3fv(location: GLint, count: GLsizei, v: *mut GLfloat);
+pub fn glUniform3fv(location: GLint, count: GLsizei, v: *const GLfloat);
 
 pub fn glUniform3i(location: GLint, x: GLint, y: GLint, z: GLint);
 
-pub fn glUniform3iv(location: GLint, count: GLsizei, v: *mut GLint);
+pub fn glUniform3iv(location: GLint, count: GLsizei, v: *const GLint);
 
 pub fn glUniform4f(location: GLint, x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat);
 
-pub fn glUniform4fv(location: GLint, count: GLsizei, v: *mut GLfloat);
+pub fn glUniform4fv(location: GLint, count: GLsizei, v: *const GLfloat);
 
 pub fn glUniform4i(location: GLint, x: GLint, y: GLint, z: GLint, w: GLint);
 
-pub fn glUniform4iv(location: GLint, count: GLsizei, v: *mut GLint);
+pub fn glUniform4iv(location: GLint, count: GLsizei, v: *const GLint);
 
-pub fn glUniformMatrix2fv(location: GLint, count: GLsizei, transpose: GLboolean, value: *mut GLfloat);
+pub fn glUniformMatrix2fv(location: GLint, count: GLsizei, transpose: GLboolean, value: *const GLfloat);
 
-pub fn glUniformMatrix3fv(location: GLint, count: GLsizei, transpose: GLboolean, value: *mut GLfloat);
+pub fn glUniformMatrix3fv(location: GLint, count: GLsizei, transpose: GLboolean, value: *const GLfloat);
 
-pub fn glUniformMatrix4fv(location: GLint, count: GLsizei, transpose: GLboolean, value: *mut GLfloat);
+pub fn glUniformMatrix4fv(location: GLint, count: GLsizei, transpose: GLboolean, value: *const GLfloat);
 
 pub fn glUseProgram(program: GLuint);
 
@@ -1420,19 +1420,19 @@ pub fn glValidateProgram(program: GLuint);
 
 pub fn glVertexAttrib1f(indx: GLuint, x: GLfloat);
 
-pub fn glVertexAttrib1fv(indx: GLuint, values: *mut GLfloat);
+pub fn glVertexAttrib1fv(indx: GLuint, values: *const GLfloat);
 
 pub fn glVertexAttrib2f(indx: GLuint, x: GLfloat, y: GLfloat);
 
-pub fn glVertexAttrib2fv(indx: GLuint, values: *mut GLfloat);
+pub fn glVertexAttrib2fv(indx: GLuint, values: *const GLfloat);
 
 pub fn glVertexAttrib3f(indx: GLuint, x: GLfloat, y: GLfloat, z: GLfloat);
 
-pub fn glVertexAttrib3fv(indx: GLuint, values: *mut GLfloat);
+pub fn glVertexAttrib3fv(indx: GLuint, values: *const GLfloat);
 
 pub fn glVertexAttrib4f(indx: GLuint, x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat);
 
-pub fn glVertexAttrib4fv(indx: GLuint, values: *mut GLfloat);
+pub fn glVertexAttrib4fv(indx: GLuint, values: *const GLfloat);
 
 pub fn glVertexAttribPointer(indx: GLuint, size: GLint, _type: GLenum, normalized: GLboolean, stride: GLsizei, ptr: *const GLvoid);
 
