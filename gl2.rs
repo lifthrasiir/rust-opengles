@@ -596,7 +596,7 @@ pub fn draw_elements_instanced(mode: GLenum, count: GLsizei, element_type: GLenu
                                     },
                                     element_type,
                                     match indices {
-                                      Some(ref i) => i.as_ptr(),
+                                      Some(ref i) => i.as_ptr() as *const _,
                                       None => ptr::null(),
                                     }, 
                                     primcount);
