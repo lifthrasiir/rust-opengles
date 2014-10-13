@@ -31,61 +31,61 @@ pub type XVisualInfo = *mut __XVisualInfo;
 
 // Constants
 
-pub static GLX_BIND_TO_TEXTURE_RGB_EXT: c_int     = 0x20d0;
-pub static GLX_BIND_TO_TEXTURE_RGBA_EXT: c_int    = 0x20d1;
-pub static GLX_BIND_TO_MIPMAP_TEXTURE_EXT: c_int  = 0x20d2;
-pub static GLX_BIND_TO_TEXTURE_TARGETS_EXT: c_int = 0x20d3;
-pub static GLX_Y_INVERTED_EXT: c_int              = 0x20d4;
+pub const GLX_BIND_TO_TEXTURE_RGB_EXT: c_int     = 0x20d0;
+pub const GLX_BIND_TO_TEXTURE_RGBA_EXT: c_int    = 0x20d1;
+pub const GLX_BIND_TO_MIPMAP_TEXTURE_EXT: c_int  = 0x20d2;
+pub const GLX_BIND_TO_TEXTURE_TARGETS_EXT: c_int = 0x20d3;
+pub const GLX_Y_INVERTED_EXT: c_int              = 0x20d4;
 
-pub static GLX_TEXTURE_FORMAT_EXT: c_int = 0x20d5;
-pub static GLX_TEXTURE_TARGET_EXT: c_int = 0x20d6;
-pub static GLX_MIPMAP_TEXTURE_EXT: c_int = 0x20d7;
+pub const GLX_TEXTURE_FORMAT_EXT: c_int = 0x20d5;
+pub const GLX_TEXTURE_TARGET_EXT: c_int = 0x20d6;
+pub const GLX_MIPMAP_TEXTURE_EXT: c_int = 0x20d7;
 
-pub static GLX_TEXTURE_FORMAT_NONE_EXT: c_int = 0x20d8;
-pub static GLX_TEXTURE_FORMAT_RGB_EXT: c_int  = 0x20d9;
-pub static GLX_TEXTURE_FORMAT_RGBA_EXT: c_int = 0x20da;
+pub const GLX_TEXTURE_FORMAT_NONE_EXT: c_int = 0x20d8;
+pub const GLX_TEXTURE_FORMAT_RGB_EXT: c_int  = 0x20d9;
+pub const GLX_TEXTURE_FORMAT_RGBA_EXT: c_int = 0x20da;
 
-pub static GLX_TEXTURE_1D_BIT_EXT: c_int        = 0x1;
-pub static GLX_TEXTURE_2D_BIT_EXT: c_int        = 0x2;
-pub static GLX_TEXTURE_RECTANGLE_BIT_EXT: c_int = 0x4;
+pub const GLX_TEXTURE_1D_BIT_EXT: c_int        = 0x1;
+pub const GLX_TEXTURE_2D_BIT_EXT: c_int        = 0x2;
+pub const GLX_TEXTURE_RECTANGLE_BIT_EXT: c_int = 0x4;
 
-pub static GLX_TEXTURE_1D_EXT: c_int        = 0x20db;
-pub static GLX_TEXTURE_2D_EXT: c_int        = 0x20dc;
-pub static GLX_TEXTURE_RECTANGLE_EXT: c_int = 0x20dd;
+pub const GLX_TEXTURE_1D_EXT: c_int        = 0x20db;
+pub const GLX_TEXTURE_2D_EXT: c_int        = 0x20dc;
+pub const GLX_TEXTURE_RECTANGLE_EXT: c_int = 0x20dd;
 
-pub static GLX_FRONT_LEFT_EXT: c_int  = 0x20de;
-pub static GLX_FRONT_RIGHT_EXT: c_int = 0x20df;
-pub static GLX_BACK_LEFT_EXT: c_int   = 0x20e0;
-pub static GLX_BACK_RIGHT_EXT: c_int  = 0x20e1;
-pub static GLX_FRONT_EXT: c_int       = GLX_FRONT_LEFT_EXT;
-pub static GLX_BACK_EXT: c_int        = GLX_BACK_LEFT_EXT;
-pub static GLX_AUX0_EXT: c_int        = 0x20e2;
-pub static GLX_AUX1_EXT: c_int        = 0x20e3;
-pub static GLX_AUX2_EXT: c_int        = 0x20e4;
-pub static GLX_AUX3_EXT: c_int        = 0x20e5;
-pub static GLX_AUX4_EXT: c_int        = 0x20e6;
-pub static GLX_AUX5_EXT: c_int        = 0x20e7;
-pub static GLX_AUX6_EXT: c_int        = 0x20e8;
-pub static GLX_AUX7_EXT: c_int        = 0x20e9;
-pub static GLX_AUX8_EXT: c_int        = 0x20ea;
-pub static GLX_AUX9_EXT: c_int        = 0x20eb;
+pub const GLX_FRONT_LEFT_EXT: c_int  = 0x20de;
+pub const GLX_FRONT_RIGHT_EXT: c_int = 0x20df;
+pub const GLX_BACK_LEFT_EXT: c_int   = 0x20e0;
+pub const GLX_BACK_RIGHT_EXT: c_int  = 0x20e1;
+pub const GLX_FRONT_EXT: c_int       = GLX_FRONT_LEFT_EXT;
+pub const GLX_BACK_EXT: c_int        = GLX_BACK_LEFT_EXT;
+pub const GLX_AUX0_EXT: c_int        = 0x20e2;
+pub const GLX_AUX1_EXT: c_int        = 0x20e3;
+pub const GLX_AUX2_EXT: c_int        = 0x20e4;
+pub const GLX_AUX3_EXT: c_int        = 0x20e5;
+pub const GLX_AUX4_EXT: c_int        = 0x20e6;
+pub const GLX_AUX5_EXT: c_int        = 0x20e7;
+pub const GLX_AUX6_EXT: c_int        = 0x20e8;
+pub const GLX_AUX7_EXT: c_int        = 0x20e9;
+pub const GLX_AUX8_EXT: c_int        = 0x20ea;
+pub const GLX_AUX9_EXT: c_int        = 0x20eb;
 
-pub static GLX_DRAWABLE_TYPE: c_int   = 0x8010;
-pub static GLX_RENDER_TYPE: c_int     = 0x8011;
+pub const GLX_DRAWABLE_TYPE: c_int   = 0x8010;
+pub const GLX_RENDER_TYPE: c_int     = 0x8011;
 
-pub static GLX_VENDOR: c_int          = 1;
+pub const GLX_VENDOR: c_int          = 1;
 
-pub static GLX_RGBA: c_int            = 4;
-pub static GLX_DOUBLEBUFFER: c_int    = 5;
-pub static GLX_ALPHA_SIZE: c_int      = 11;
-pub static GLX_DEPTH_SIZE: c_int      = 12;
+pub const GLX_RGBA: c_int            = 4;
+pub const GLX_DOUBLEBUFFER: c_int    = 5;
+pub const GLX_ALPHA_SIZE: c_int      = 11;
+pub const GLX_DEPTH_SIZE: c_int      = 12;
 
-pub static GLX_WINDOW_BIT: c_int      = 0x01;
-pub static GLX_PIXMAP_BIT: c_int      = 0x02;
-pub static GLX_PBUFFER_BIT: c_int     = 0x04;
-pub static GLX_AUX_BUFFERS_BIT: c_int = 0x10;
+pub const GLX_WINDOW_BIT: c_int      = 0x01;
+pub const GLX_PIXMAP_BIT: c_int      = 0x02;
+pub const GLX_PBUFFER_BIT: c_int     = 0x04;
+pub const GLX_AUX_BUFFERS_BIT: c_int = 0x10;
 
-pub static GLX_RGBA_BIT: c_int        = 0x00000001;
+pub const GLX_RGBA_BIT: c_int        = 0x00000001;
 // Functions
 
 extern {

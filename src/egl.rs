@@ -9,8 +9,10 @@
 
 //! Bindings to EGL (currently limited to win32 platform)
 
+#![allow(non_uppercase_statics)]
+
 use libc::{c_uint, c_void, c_char, HANDLE};
-use std::ptr::{null, mut_null};
+use std::ptr::{null, null_mut};
 use std::string::raw::from_buf;
 
 pub type EGLint = i32;
@@ -32,128 +34,128 @@ pub struct Surface(EGLSurface);
 #[cfg(target_os="windows")] pub type EGLNativePixmapType = HANDLE;
 #[cfg(target_os="windows")] pub type EGLNativeWindowType = HANDLE;
 
-pub static FALSE: EGLBoolean = 0;
-pub static TRUE: EGLBoolean = 1;
-pub static DEFAULT_DISPLAY: EGLNativeDisplayType = 0 as EGLNativeDisplayType;
-pub static NO_CONTEXT: EGLContext = 0 as EGLContext;
-pub static NO_DISPLAY: EGLDisplay = 0 as EGLDisplay;
-pub static NO_SURFACE: EGLSurface = 0 as EGLSurface;
-pub static DONT_CARE: EGLint = -1;
-pub static SUCCESS: EGLenum = 0x3000;
-pub static NOT_INITIALIZED: EGLenum = 0x3001;
-pub static BAD_ACCESS: EGLenum = 0x3002;
-pub static BAD_ALLOC: EGLenum = 0x3003;
-pub static BAD_ATTRIBUTE: EGLenum = 0x3004;
-pub static BAD_CONFIG: EGLenum = 0x3005;
-pub static BAD_CONTEXT: EGLenum = 0x3006;
-pub static BAD_CURRENT_SURFACE: EGLenum = 0x3007;
-pub static BAD_DISPLAY: EGLenum = 0x3008;
-pub static BAD_MATCH: EGLenum = 0x3009;
-pub static BAD_NATIVE_PIXMAP: EGLenum = 0x300A;
-pub static BAD_NATIVE_WINDOW: EGLenum = 0x300B;
-pub static BAD_PARAMETER: EGLenum = 0x300C;
-pub static BAD_SURFACE: EGLenum = 0x300D;
-pub static CONTEXT_LOST: EGLenum = 0x300E;
-pub static BUFFER_SIZE: EGLenum = 0x3020;
-pub static ALPHA_SIZE: EGLenum = 0x3021;
-pub static BLUE_SIZE: EGLenum = 0x3022;
-pub static GREEN_SIZE: EGLenum = 0x3023;
-pub static RED_SIZE: EGLenum = 0x3024;
-pub static DEPTH_SIZE: EGLenum = 0x3025;
-pub static STENCIL_SIZE: EGLenum = 0x3026;
-pub static CONFIG_CAVEAT: EGLenum = 0x3027;
-pub static CONFIG_ID: EGLenum = 0x3028;
-pub static LEVEL: EGLenum = 0x3029;
-pub static MAX_PBUFFER_HEIGHT: EGLenum = 0x302A;
-pub static MAX_PBUFFER_PIXELS: EGLenum = 0x302B;
-pub static MAX_PBUFFER_WIDTH: EGLenum = 0x302C;
-pub static NATIVE_RENDERABLE: EGLenum = 0x302D;
-pub static NATIVE_VISUAL_ID: EGLenum = 0x302E;
-pub static NATIVE_VISUAL_TYPE: EGLenum = 0x302F;
-pub static SAMPLES: EGLenum = 0x3031;
-pub static SAMPLE_BUFFERS: EGLenum = 0x3032;
-pub static SURFACE_TYPE: EGLenum = 0x3033;
-pub static TRANSPARENT_TYPE: EGLenum = 0x3034;
-pub static TRANSPARENT_BLUE_VALUE: EGLenum = 0x3035;
-pub static TRANSPARENT_GREEN_VALUE: EGLenum = 0x3036;
-pub static TRANSPARENT_RED_VALUE: EGLenum = 0x3037;
-pub static NONE: EGLenum = 0x3038;
-pub static BIND_TO_TEXTURE_RGB: EGLenum = 0x3039;
-pub static BIND_TO_TEXTURE_RGBA: EGLenum = 0x303A;
-pub static MIN_SWAP_INTERVAL: EGLenum = 0x303B;
-pub static MAX_SWAP_INTERVAL: EGLenum = 0x303C;
-pub static LUMINANCE_SIZE: EGLenum = 0x303D;
-pub static ALPHA_MASK_SIZE: EGLenum = 0x303E;
-pub static COLOR_BUFFER_TYPE: EGLenum = 0x303F;
-pub static RENDERABLE_TYPE: EGLenum = 0x3040;
-pub static MATCH_NATIVE_PIXMAP: EGLenum = 0x3041;
-pub static CONFORMANT: EGLenum = 0x3042;
-pub static SLOW_CONFIG: EGLenum = 0x3050;
-pub static NON_CONFORMANT_CONFIG: EGLenum = 0x3051;
-pub static TRANSPARENT_RGB: EGLenum = 0x3052;
-pub static RGB_BUFFER: EGLenum = 0x308E;
-pub static LUMINANCE_BUFFER: EGLenum = 0x308F;
-pub static NO_TEXTURE: EGLenum = 0x305C;
-pub static TEXTURE_RGB: EGLenum = 0x305D;
-pub static TEXTURE_RGBA: EGLenum = 0x305E;
-pub static TEXTURE_2D: EGLenum = 0x305F;
-pub static PBUFFER_BIT: EGLint = 0x0001;
-pub static PIXMAP_BIT: EGLint = 0x0002;
-pub static WINDOW_BIT: EGLint = 0x0004;
-pub static VG_COLORSPACE_LINEAR_BIT: EGLint = 0x0020;
-pub static VG_ALPHA_FORMAT_PRE_BIT: EGLint = 0x0040;
-pub static MULTISAMPLE_RESOLVE_BOX_BIT: EGLint = 0x0200;
-pub static SWAP_BEHAVIOR_PRESERVED_BIT: EGLint = 0x0400;
-pub static OPENGL_ES_BIT: EGLint = 0x0001;
-pub static OPENVG_BIT: EGLint = 0x0002;
-pub static OPENGL_ES2_BIT: EGLint = 0x0004;
-pub static OPENGL_BIT: EGLint = 0x0008;
-pub static VENDOR: EGLenum = 0x3053;
-pub static VERSION: EGLenum = 0x3054;
-pub static EXTENSIONS: EGLenum = 0x3055;
-pub static CLIENT_APIS: EGLenum = 0x308D;
-pub static HEIGHT: EGLenum = 0x3056;
-pub static WIDTH: EGLenum = 0x3057;
-pub static LARGEST_PBUFFER: EGLenum = 0x3058;
-pub static TEXTURE_FORMAT: EGLenum = 0x3080;
-pub static TEXTURE_TARGET: EGLenum = 0x3081;
-pub static MIPMAP_TEXTURE: EGLenum = 0x3082;
-pub static MIPMAP_LEVEL: EGLenum = 0x3083;
-pub static RENDER_BUFFER: EGLenum = 0x3086;
-pub static VG_COLORSPACE: EGLenum = 0x3087;
-pub static VG_ALPHA_FORMAT: EGLenum = 0x3088;
-pub static HORIZONTAL_RESOLUTION: EGLenum = 0x3090;
-pub static VERTICAL_RESOLUTION: EGLenum = 0x3091;
-pub static PIXEL_ASPECT_RATIO: EGLenum = 0x3092;
-pub static SWAP_BEHAVIOR: EGLenum = 0x3093;
-pub static MULTISAMPLE_RESOLVE: EGLenum = 0x3099;
-pub static BACK_BUFFER: EGLenum = 0x3084;
-pub static SINGLE_BUFFER: EGLenum = 0x3085;
-pub static VG_COLORSPACE_sRGB: EGLenum = 0x3089;
-pub static VG_COLORSPACE_LINEAR: EGLenum = 0x308A;
-pub static VG_ALPHA_FORMAT_NONPRE: EGLenum = 0x308B;
-pub static VG_ALPHA_FORMAT_PRE: EGLenum = 0x308C;
-pub static DISPLAY_SCALING: EGLint = 10000;
-pub static UNKNOWN: EGLint = -1;
-pub static BUFFER_PRESERVED: EGLenum = 0x3094;
-pub static BUFFER_DESTROYED: EGLenum = 0x3095;
-pub static OPENVG_IMAGE: EGLenum = 0x3096;
-pub static CONTEXT_CLIENT_TYPE: EGLenum = 0x3097;
-pub static CONTEXT_CLIENT_VERSION: EGLenum = 0x3098;
-pub static MULTISAMPLE_RESOLVE_DEFAULT: EGLenum = 0x309A;
-pub static MULTISAMPLE_RESOLVE_BOX: EGLenum = 0x309B;
-pub static OPENGL_ES_API: EGLenum = 0x30A0;
-pub static OPENVG_API: EGLenum = 0x30A1;
-pub static OPENGL_API: EGLenum = 0x30A2;
-pub static DRAW: EGLenum = 0x3059;
-pub static READ: EGLenum = 0x305A;
-pub static CORE_NATIVE_ENGINE: EGLenum = 0x305B;
-pub static COLORSPACE: EGLenum = VG_COLORSPACE;
-pub static ALPHA_FORMAT: EGLenum = VG_ALPHA_FORMAT;
-pub static COLORSPACE_sRGB: EGLenum = VG_COLORSPACE_sRGB;
-pub static COLORSPACE_LINEAR: EGLenum = VG_COLORSPACE_LINEAR;
-pub static ALPHA_FORMAT_NONPRE: EGLenum = VG_ALPHA_FORMAT_NONPRE;
-pub static ALPHA_FORMAT_PRE: EGLenum = VG_ALPHA_FORMAT_PRE;
+pub const FALSE: EGLBoolean = 0;
+pub const TRUE: EGLBoolean = 1;
+pub const DEFAULT_DISPLAY: EGLNativeDisplayType = 0 as EGLNativeDisplayType;
+pub const NO_CONTEXT: EGLContext = 0 as EGLContext;
+pub const NO_DISPLAY: EGLDisplay = 0 as EGLDisplay;
+pub const NO_SURFACE: EGLSurface = 0 as EGLSurface;
+pub const DONT_CARE: EGLint = -1;
+pub const SUCCESS: EGLenum = 0x3000;
+pub const NOT_INITIALIZED: EGLenum = 0x3001;
+pub const BAD_ACCESS: EGLenum = 0x3002;
+pub const BAD_ALLOC: EGLenum = 0x3003;
+pub const BAD_ATTRIBUTE: EGLenum = 0x3004;
+pub const BAD_CONFIG: EGLenum = 0x3005;
+pub const BAD_CONTEXT: EGLenum = 0x3006;
+pub const BAD_CURRENT_SURFACE: EGLenum = 0x3007;
+pub const BAD_DISPLAY: EGLenum = 0x3008;
+pub const BAD_MATCH: EGLenum = 0x3009;
+pub const BAD_NATIVE_PIXMAP: EGLenum = 0x300A;
+pub const BAD_NATIVE_WINDOW: EGLenum = 0x300B;
+pub const BAD_PARAMETER: EGLenum = 0x300C;
+pub const BAD_SURFACE: EGLenum = 0x300D;
+pub const CONTEXT_LOST: EGLenum = 0x300E;
+pub const BUFFER_SIZE: EGLenum = 0x3020;
+pub const ALPHA_SIZE: EGLenum = 0x3021;
+pub const BLUE_SIZE: EGLenum = 0x3022;
+pub const GREEN_SIZE: EGLenum = 0x3023;
+pub const RED_SIZE: EGLenum = 0x3024;
+pub const DEPTH_SIZE: EGLenum = 0x3025;
+pub const STENCIL_SIZE: EGLenum = 0x3026;
+pub const CONFIG_CAVEAT: EGLenum = 0x3027;
+pub const CONFIG_ID: EGLenum = 0x3028;
+pub const LEVEL: EGLenum = 0x3029;
+pub const MAX_PBUFFER_HEIGHT: EGLenum = 0x302A;
+pub const MAX_PBUFFER_PIXELS: EGLenum = 0x302B;
+pub const MAX_PBUFFER_WIDTH: EGLenum = 0x302C;
+pub const NATIVE_RENDERABLE: EGLenum = 0x302D;
+pub const NATIVE_VISUAL_ID: EGLenum = 0x302E;
+pub const NATIVE_VISUAL_TYPE: EGLenum = 0x302F;
+pub const SAMPLES: EGLenum = 0x3031;
+pub const SAMPLE_BUFFERS: EGLenum = 0x3032;
+pub const SURFACE_TYPE: EGLenum = 0x3033;
+pub const TRANSPARENT_TYPE: EGLenum = 0x3034;
+pub const TRANSPARENT_BLUE_VALUE: EGLenum = 0x3035;
+pub const TRANSPARENT_GREEN_VALUE: EGLenum = 0x3036;
+pub const TRANSPARENT_RED_VALUE: EGLenum = 0x3037;
+pub const NONE: EGLenum = 0x3038;
+pub const BIND_TO_TEXTURE_RGB: EGLenum = 0x3039;
+pub const BIND_TO_TEXTURE_RGBA: EGLenum = 0x303A;
+pub const MIN_SWAP_INTERVAL: EGLenum = 0x303B;
+pub const MAX_SWAP_INTERVAL: EGLenum = 0x303C;
+pub const LUMINANCE_SIZE: EGLenum = 0x303D;
+pub const ALPHA_MASK_SIZE: EGLenum = 0x303E;
+pub const COLOR_BUFFER_TYPE: EGLenum = 0x303F;
+pub const RENDERABLE_TYPE: EGLenum = 0x3040;
+pub const MATCH_NATIVE_PIXMAP: EGLenum = 0x3041;
+pub const CONFORMANT: EGLenum = 0x3042;
+pub const SLOW_CONFIG: EGLenum = 0x3050;
+pub const NON_CONFORMANT_CONFIG: EGLenum = 0x3051;
+pub const TRANSPARENT_RGB: EGLenum = 0x3052;
+pub const RGB_BUFFER: EGLenum = 0x308E;
+pub const LUMINANCE_BUFFER: EGLenum = 0x308F;
+pub const NO_TEXTURE: EGLenum = 0x305C;
+pub const TEXTURE_RGB: EGLenum = 0x305D;
+pub const TEXTURE_RGBA: EGLenum = 0x305E;
+pub const TEXTURE_2D: EGLenum = 0x305F;
+pub const PBUFFER_BIT: EGLint = 0x0001;
+pub const PIXMAP_BIT: EGLint = 0x0002;
+pub const WINDOW_BIT: EGLint = 0x0004;
+pub const VG_COLORSPACE_LINEAR_BIT: EGLint = 0x0020;
+pub const VG_ALPHA_FORMAT_PRE_BIT: EGLint = 0x0040;
+pub const MULTISAMPLE_RESOLVE_BOX_BIT: EGLint = 0x0200;
+pub const SWAP_BEHAVIOR_PRESERVED_BIT: EGLint = 0x0400;
+pub const OPENGL_ES_BIT: EGLint = 0x0001;
+pub const OPENVG_BIT: EGLint = 0x0002;
+pub const OPENGL_ES2_BIT: EGLint = 0x0004;
+pub const OPENGL_BIT: EGLint = 0x0008;
+pub const VENDOR: EGLenum = 0x3053;
+pub const VERSION: EGLenum = 0x3054;
+pub const EXTENSIONS: EGLenum = 0x3055;
+pub const CLIENT_APIS: EGLenum = 0x308D;
+pub const HEIGHT: EGLenum = 0x3056;
+pub const WIDTH: EGLenum = 0x3057;
+pub const LARGEST_PBUFFER: EGLenum = 0x3058;
+pub const TEXTURE_FORMAT: EGLenum = 0x3080;
+pub const TEXTURE_TARGET: EGLenum = 0x3081;
+pub const MIPMAP_TEXTURE: EGLenum = 0x3082;
+pub const MIPMAP_LEVEL: EGLenum = 0x3083;
+pub const RENDER_BUFFER: EGLenum = 0x3086;
+pub const VG_COLORSPACE: EGLenum = 0x3087;
+pub const VG_ALPHA_FORMAT: EGLenum = 0x3088;
+pub const HORIZONTAL_RESOLUTION: EGLenum = 0x3090;
+pub const VERTICAL_RESOLUTION: EGLenum = 0x3091;
+pub const PIXEL_ASPECT_RATIO: EGLenum = 0x3092;
+pub const SWAP_BEHAVIOR: EGLenum = 0x3093;
+pub const MULTISAMPLE_RESOLVE: EGLenum = 0x3099;
+pub const BACK_BUFFER: EGLenum = 0x3084;
+pub const SINGLE_BUFFER: EGLenum = 0x3085;
+pub const VG_COLORSPACE_sRGB: EGLenum = 0x3089;
+pub const VG_COLORSPACE_LINEAR: EGLenum = 0x308A;
+pub const VG_ALPHA_FORMAT_NONPRE: EGLenum = 0x308B;
+pub const VG_ALPHA_FORMAT_PRE: EGLenum = 0x308C;
+pub const DISPLAY_SCALING: EGLint = 10000;
+pub const UNKNOWN: EGLint = -1;
+pub const BUFFER_PRESERVED: EGLenum = 0x3094;
+pub const BUFFER_DESTROYED: EGLenum = 0x3095;
+pub const OPENVG_IMAGE: EGLenum = 0x3096;
+pub const CONTEXT_CLIENT_TYPE: EGLenum = 0x3097;
+pub const CONTEXT_CLIENT_VERSION: EGLenum = 0x3098;
+pub const MULTISAMPLE_RESOLVE_DEFAULT: EGLenum = 0x309A;
+pub const MULTISAMPLE_RESOLVE_BOX: EGLenum = 0x309B;
+pub const OPENGL_ES_API: EGLenum = 0x30A0;
+pub const OPENVG_API: EGLenum = 0x30A1;
+pub const OPENGL_API: EGLenum = 0x30A2;
+pub const DRAW: EGLenum = 0x3059;
+pub const READ: EGLenum = 0x305A;
+pub const CORE_NATIVE_ENGINE: EGLenum = 0x305B;
+pub const COLORSPACE: EGLenum = VG_COLORSPACE;
+pub const ALPHA_FORMAT: EGLenum = VG_ALPHA_FORMAT;
+pub const COLORSPACE_sRGB: EGLenum = VG_COLORSPACE_sRGB;
+pub const COLORSPACE_LINEAR: EGLenum = VG_COLORSPACE_LINEAR;
+pub const ALPHA_FORMAT_NONPRE: EGLenum = VG_ALPHA_FORMAT_NONPRE;
+pub const ALPHA_FORMAT_PRE: EGLenum = VG_ALPHA_FORMAT_PRE;
 
 fn wrap_error<T>() -> Result<T,EGLenum> {
     unsafe { Err(eglGetError() as EGLenum) }
@@ -240,10 +242,10 @@ pub fn num_configs(dpy: Display, attrib_list: AttribList) -> Result<int,EGLenum>
     unsafe {
         let mut actual: EGLint = 0;
         let ret = if attrib_list.is_empty() {
-            eglGetConfigs(dpy, mut_null(), 0, &mut actual)
+            eglGetConfigs(dpy, null_mut(), 0, &mut actual)
         } else {
             unwrap_attrib_list(attrib_list, |attrib_list| {
-                eglChooseConfig(dpy, attrib_list, mut_null(), 0, &mut actual)
+                eglChooseConfig(dpy, attrib_list, null_mut(), 0, &mut actual)
             })
         };
         if ret == TRUE {
@@ -278,7 +280,7 @@ pub fn get_configs(dpy: Display, attrib_list: AttribList, num: Option<uint>) -> 
         };
         if ret == TRUE {
             configs.truncate(actual as uint);
-            Ok(configs.move_iter().map(Config).collect())
+            Ok(configs.into_iter().map(Config).collect())
         } else {
             wrap_error()
         }

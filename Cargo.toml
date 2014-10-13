@@ -1,0 +1,9 @@
+[package]
+
+name = "opengles"
+version = "0.1.0"
+authors = ["The Servo Project Developers"]
+
+# rust-opengles-angle addition
+build = "make angle-rust-deps"
+
